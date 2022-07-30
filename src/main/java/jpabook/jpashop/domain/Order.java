@@ -90,7 +90,7 @@ public class Order {
         }
 
         //주문 상태 취소로 변경
-        this.setStatus(OrderStatus.CENCEL);
+        this.setStatus(OrderStatus.CANCEL);
 
         //취소일 때 재고를 올림림
         for(OrderItem orderItem : this.orderItems){

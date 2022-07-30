@@ -29,7 +29,7 @@ public class ItemRepository {
 
     //전체 상품 조회회
     public List<Item> findAll(){
-        return em.createQuery("select i find Item i", Item.class)
+        return em.createQuery("select i from Item i", Item.class)
                 .getResultList();
     }
 }
