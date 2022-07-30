@@ -26,6 +26,7 @@ public class MemberService {
         //memberRepository 에 값을 주입하기가 힘들다.
         // setter로 주입해주면 애플리케이션이 동작하면서 값이 변경될 수 있음 >> 생성자로 설정하여 초기 한 번만 해주는 것으로 설정
         //생성자로 해두면 memberRepository는 초기 한 번 적용되는 것이기 때문에 final 사용함.
+        * >> 따라서 @RequiredArgsConstructor를 사용하여 생성자 자동 생성해주기 때문에
     }
     */
 
