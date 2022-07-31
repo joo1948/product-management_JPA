@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -18,13 +20,13 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/items/new")
-    public String createForm(Model model){
-        model.addAttribute("form" , new BookForm());
+    public String createForm(Model model) {
+        model.addAttribute("form", new BookForm());
         return "items/createItemForm";
     }
 
     @PostMapping("items/new")
-    public String create(BookForm form){
+    public String create(BookForm form) {
         Book book = new Book();
         book.setName(form.getName());
         book.setPrice(form.getPrice());
@@ -38,9 +40,35 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public String list(Model model){
+    public String list(Model model) {
         List<Item> items = itemService.findItems();
         model.addAttribute("items", items);
         return "items/itemList";
+    }
+
+    @GetMapping("/items/{itemId}/edit")
+    public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
+        Book item = (Book) itemService.findOne(itemId);
+
+        BookForm form = new BookForm();
+        form.setId(item.getId());
+        form.setName(item.getName());
+        form.setPrice(item.getPrice());
+        form.setStockQuantity(item.getStockQuantity());
+        form.setAuthor(item.getAuthor());
+        form.setIsbn(item.getIsbn());
+
+        model.addAttribute("form", form);
+        return "items/updateItemForm";
+    }
+
+    @PostMapping("/items/{itemId}/edit")
+    public String updateItem(@PathVariable("itemId") Long itemId, @ModelAttribute("form") BookForm form) {
+        //@ModelAttribute >> form이라는 이름이 default로 설정됨.
+        //itemRepository에있는 merge를 사용하지 않고 변경하자
+
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
+        return "redirect:/items";
     }
 }
