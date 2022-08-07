@@ -96,4 +96,28 @@ public class OrderRepository {
 
     }
 
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+
+        return em.createQuery("select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+        //XToOne에서는 fetch join을 사용해도 페이징 처리가 가능하다.
+        // 성능 이슈가 크게 발생 X
+    }
+
+
+    public List<Order> findAllWithItems() {
+
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                                " join fetch o.delivery d" +
+                                " join fetch o.orderItems oi" +
+                                " join fetch oi.item i", Order.class)
+                .getResultList();
+        //distinct >> db에서는 중복으로 나오게 됨. 하지만 JPA에서 Order에 대하여 중복을 걸러주기 때문에 데이터 2개 출력됨.
+    }
 }
